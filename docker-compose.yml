@@ -32,7 +32,7 @@ services:
     image: tailscale/tailscale
     restart: unless-stopped
     environment:
-      - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true'
+      - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
@@ -66,7 +66,7 @@ services:
     image: tailscale/tailscale
     restart: unless-stopped
     environment:
-      - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true'
+      - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
