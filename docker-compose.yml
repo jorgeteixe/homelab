@@ -140,5 +140,7 @@ volumes:
     name: caddy-data
   caddy-config:
     name: caddy-config
-  tailscale-data:
-    name: tailscale-data
+  tailscale-coredns-data:
+    name: tailscale-coredns-data
+  tailscale-caddy-data:
+    name: tailscale-caddy-data
