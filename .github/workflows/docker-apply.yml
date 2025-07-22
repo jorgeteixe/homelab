@@ -1,0 +1,27 @@
+name: Docker Compose Apply
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .env.enc
+      - docker-compose.yml
+      - config/**
+
+jobs:
+  acls:
+    name: Docker Compose Apply
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          use-cache: 'true'
+          tags: tag:ci
+
+      - name: Execute CI Update Script
+        run: tailscale ssh teixe@pi-homelab /home/teixe/homelab/ci-update.sh
