@@ -1,0 +1,19 @@
+// This tailnet's ACLs are maintained in https://github.com/jorgeteixe/homelab
+{
+	"tagOwners": {
+		"tag:homelab-host": ["jorgeteixe@github"],
+		"tag:container":    ["jorgeteixe@github"],
+		"tag:ci":           ["jorgeteixe@github"],
+	},
+	"grants": [
+		{"src": ["*"], "dst": ["*"], "ip": ["*"]},
+	],
+	"ssh": [
+		{
+			"action": "accept",
+			"src":    ["tag:ci"],
+			"dst":    ["tag:homelab-host"],
+			"users":  ["teixe"],
+		},
+	],
+}
