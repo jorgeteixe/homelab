@@ -1,4 +1,12 @@
 services:
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - homelab
+
   cloudflared:
     container_name: cloudflared
     image: cloudflare/cloudflared
@@ -45,7 +53,7 @@ services:
 
   calibre-web-automated:
     container_name: calibre-web-automated
-    image: crocodilestick/calibre-web-automated:latest
+    image: crocodilestick/calibre-web-automated
     restart: unless-stopped
     environment:
       - PUID=1000
@@ -60,7 +68,7 @@ services:
 
   cwa-book-downloader:
     container_name: cwa-book-downloader
-    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader
     depends_on:
       - calibre-web-automated
     environment:
@@ -81,7 +89,7 @@ services:
       - homelab
 
   openbooks:
-    image: evanbuss/openbooks:latest
+    image: evanbuss/openbooks
     container_name: openbooks
     command: --persist --name ${OPENBOOKS_NAME}
     restart: unless-stopped
