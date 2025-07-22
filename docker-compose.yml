@@ -83,7 +83,7 @@ services:
   openbooks:
     image: evanbuss/openbooks:latest
     container_name: openbooks
-    command: --persist --name a0a65c7acf67e9fc2
+    command: --persist --name ${OPENBOOKS_NAME}
     restart: unless-stopped
     volumes:
       - ./data/calibre/ingest:/books/books
