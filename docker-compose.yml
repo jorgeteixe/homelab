@@ -24,26 +24,10 @@ services:
     restart: unless-stopped
     volumes:
       - ./config/coredns/Corefile:/Corefile:ro
-    network_mode: service:tailscale-coredns
-
-  tailscale-coredns:
-    container_name: tailscale-coredns
-    hostname: coredns-bridge
-    image: tailscale/tailscale
-    restart: unless-stopped
-    environment:
-      - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true
-      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-    volumes:
-      - tailscale-coredns-data:/var/lib/tailscale
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - net_admin
     networks:
-      - homelab
+      homelab:
+        ipv4_address:
+          - 172.20.10.254
 
   caddy:
     container_name: caddy
