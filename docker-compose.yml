@@ -41,26 +41,28 @@ services:
       - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
-    network_mode: service:tailscale-caddy
+    networks:
+      - homelab
 
-  tailscale-caddy:
-    container_name: tailscale-caddy
-    hostname: caddy-bridge
+  tailscale:
+    container_name: tailscale
+    hostname: tailscale-docker
     image: tailscale/tailscale
     restart: unless-stopped
     environment:
       - TS_AUTHKEY=${TS_OAUTH_SECRET}?ephemeral=false&preauthorized=true
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
       - TS_STATE_DIR=/var/lib/tailscale
+      - TS_ROUTES=172.20.10.0/24
       - TS_USERSPACE=false
+    privileged: true
     volumes:
-      - tailscale-caddy-data:/var/lib/tailscale
+      - tailscale-data:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
-    networks:
-      - homelab
+    network_mode: host
 
   calibre-web-automated:
     container_name: calibre-web-automated
@@ -119,9 +121,9 @@ networks:
           gateway: 172.20.10.1
 
 volumes:
+  tailscale-data:
+    name: tailscale-data
   caddy-data:
     name: caddy-data
   caddy-config:
     name: caddy-config
-  tailscale-caddy-data:
-    name: tailscale-caddy-data
