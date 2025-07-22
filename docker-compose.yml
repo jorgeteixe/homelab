@@ -1,0 +1,108 @@
+services:
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    networks:
+      - homelab
+
+  caddy:
+    container_name: caddy
+    build: ./config/caddy/
+    restart: unless-stopped
+    # See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+    cap_add:
+      - net_admin
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+    volumes:
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    network_mode: service:tailscale-caddy
+
+  tailscale-caddy:
+    container_name: tailscale-caddy
+    hostname: caddy-bridge
+    image: tailscale/tailscale
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - tailscale-data:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+    networks:
+      - homelab
+
+  calibre-web-automated:
+    container_name: calibre-web-automated
+    image: crocodilestick/calibre-web-automated:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - ./data/calibre/config:/config
+      - ./data/calibre/ingest:/cwa-book-ingest
+      - ./data/calibre/library:/calibre-library
+    networks:
+      - homelab
+
+  cwa-book-downloader:
+    container_name: cwa-book-downloader
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:latest
+    depends_on:
+      - calibre-web-automated
+    environment:
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en,es
+      USE_BOOK_TITLE: true
+      TZ: Europe/Madrid
+      APP_ENV: prod
+      UID: 1000
+      GID: 100
+      CWA_DB_PATH: /auth/app.db
+    restart: unless-stopped
+    volumes:
+      - ./data/calibre/ingest:/cwa-book-ingest
+      - ./data/calibre/config/app.db:/auth/app.db:ro
+    networks:
+      - homelab
+
+  openbooks:
+    image: evanbuss/openbooks:latest
+    container_name: openbooks
+    command: --persist --name a0a65c7acf67e9fc2
+    restart: unless-stopped
+    volumes:
+      - ./data/calibre/ingest:/books/books
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    name: homelab
+    ipam:
+      config:
+        - subnet: 172.20.10.0/24
+          ip_range: 172.20.10.0/24
+          gateway: 172.20.10.1
+
+volumes:
+  caddy-data:
+    name: caddy-data
+  caddy-config:
+    name: caddy-config
+  tailscale-data:
+    name: tailscale-data
