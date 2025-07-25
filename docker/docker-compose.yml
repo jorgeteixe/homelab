@@ -1,0 +1,26 @@
+services:
+  coredns:
+    container_name: coredns
+    image: coredns/coredns
+    restart: unless-stopped
+    volumes:
+      - ./config/coredns/Corefile:/Corefile:ro
+    networks:
+      homelab:
+        ipv4_address: 172.20.10.254
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    name: homelab
+    ipam:
+      config:
+        - subnet: 172.20.10.0/24
+          ip_range: 172.20.10.0/24
+          gateway: 172.20.10.1
