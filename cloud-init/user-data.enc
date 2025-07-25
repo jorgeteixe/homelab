@@ -1,0 +1,120 @@
+#cloud-config
+hostname: pi-homelab
+create_hostname_file: true
+manage_etc_hosts: true
+timezone: Europe/Madrid
+keyboard:
+    model: pc105
+    layout: es
+write_files:
+    - path: /etc/sysctl.d/99-tailscale.conf
+      owner: root:root
+      permissions: "0644"
+      content: |
+        net.ipv4.ip_forward = 1
+        net.ipv6.conf.all.forwarding = 1
+    - path: /etc/networkd-dispatcher/routable.d/50-tailscale
+      owner: root:root
+      permissions: "0755"
+      content: |
+        #!/bin/sh
+        ethtool -K eth0 rx-udp-gro-forwarding on rx-gro-list off
+    - path: /root/tailscale.authkey
+      owner: root:root
+      permissions: "0600"
+      # sops-encrypt
+      content: ENC[AES256_GCM,data:oaFUYIBmhVDvH+KlTmHMqfLXVDgzIoQfvdgdlQGC5OXLQqshlWFP3zyN8IHCJQ6QZYoL0aYqpONlIq5U4BeAqo0=,iv:gwV2a5+K+dVZlxEGfcRh1kpp+1QnxA4NhkDLqufIsQI=,tag:KquAX4ph8DnRruh6uu7i+A==,type:str]
+    - path: /home/teixe/gpg-secret.asc
+      owner: teixe:teixe
+      permissions: "0600"
+      # sops-encrypt
+      content: ENC[AES256_GCM,data:EyxDKANj+etwh7+sZ2+jEN6+9DiPKqnp/ddNQXANXJiuqZlqoJ6lWCwPfY0GvkmAdCw8RLrdRbbcg6hbFu6Rg1OyxE9v+Q8oMDWong0MN1jUH4tBOwuLM2FByNNPdIG3e2VTsNai0dTb9MlDF7HNKY8DpR7RN9Ephu6SS7y9zhsoxdVudEvonB1/WJ0bo/V3gCIv/kP4JmdmmjnvviTJTYBOY5/SBZ+Ew8DzF8veVqyQ8T4VkxhoSzAL46Ab9Y4EB8yBOPQB6wWH94HD7sueVJWju23Ei1XK5IsVM36pZNzcsrygOj2OgUd22HqNaUtjw04CUxYul092+PExzoofuMaGOR8iZfgb/d+gyC5ILK12elenYIlYrxtlQixkcPmi4bn5x8Iz+8J4FC4gP51iu9A5Do9ByAYXDUKxCVdDLI/yafPCz4gGuTQXoA/fKL+mIzrJ2A+Slb5GZj69hRA9EjNA2zQdSeIwQy+tp9M598m4XszTPdUVw2SxzP18lE6Mxa4nlqvMYm39WeFZFf0WWkixQG5nCmplJZ6KxWauUKNzNaEXe9vhAQDSNah7l7AxyqL8v6g37Z+wUlTF4bDqfSvru3YMw4trqFbYX7uO028nBPkw4hkPCO9zV2ds09ZgmsXj8bUi+fg+NpAUH7Kh7qs2bwjz+1PAKdVcelZR7HvPqsUO2t/bVc1hdLYine/yhSB80yMNaQBN9g77/uSTK8YoxdTscvhN442OOQjm333Ky4CZFKmUPiAqvIIbIpoXLWiXQfxwX+plBm7FdxoVf4XU80Neu72mPHlXkJYFtdqTi4J8dUjsYYSfq+sccyY459CyxYMOGu3ko31yE9yFXH/ZTzRNuGDC2q2kxW0tOrhL3qlKRevoTG+USucEosP8hv37q3Nm9JBDmP9kflTtc6D7HuTOLA5YrVK+ugtEctw9xEdA9yOOXdTDKGw/1SiZduETs7SUN+kaEr50daMvSGvDFw6RAuFMKO0lMlR4RpHBsKq+HDhVYueQHj4LNhRDlWtKaNg85Gj2Ayh9Hr3XM50WzbAyibqLpddYUbqwt1SDU/lSk6kMYoPAAvgzH1TjyAIu53QXJ6uWhiCP1QHVqwUCVsBbW1eDXKMMIRTsVQMwQ7WUxRCW/q0hpmxggDLARaqGqcG2g0VcwhTIODt5oJpdqxCL9JEo7lIod0jz6r3rqnMftMo0/2ZycKCEeMqvcDKx25euV3RhlXcme+mbfa16XOuyYZGNJpfvdB74MffZEb4KLKpXiIxahfuXcp2lGIaxn+wnXZ15lB/HdgllOwFi9dT4XXcvKCIPDGWze+xRSn6rPXYL9kaGI4KYqYyqKcHw+Nvlr7vnj+C1cEE79ZGflqQfKlLKoJ6Cctwuu+jzA2KZub3WAWdr5/TPFvf3edrZUzlIvUMKHS6lonIlTZ99YjXuNEijG3tdhtyRhbcf9laqulQGaMtevvJrmBVjmxgliwbsKjLf+dKvt1PUgMXLrzqrhUTcKsYZOlDBR3vmZ6ANqGMCmIHzbpnlTXMTbFaj0exCtHdg/fnu6ZdQVrSxMQe6lI4FAt6PofueMCpZgadvpEdPO44GoqY9wkw1BlmkcgT0BHMoSQJEpdnhPhkGsfOuim/aXXjtTVEXIFdRzuZ5jcX9ABemYmWMKDyNyeytxWrfn2UIUHXOKsR+d1Bisw1hNWw9AhDu10ZEllmYQ/2QEiD67VkVnew46hm/GXynt9HCs97nHDHH/c0ruRLxH2Jy88PQY38XhCRYweVPvD7QSL+kokdS1YpZYTLXzN7g2TqAVIZa/s3LtyKtuDETQG/ir9P7BuKJnhJlTGqJsBzWAC1+EcGRJgKmoD4K3E0vvH0s1YRb3kwH4omMNHCyZfeqnUJkDG4W6X1Zwnm6LJrrIXYEn7qLmevJUA3Vzwxp5+qXCIZ5cs1Xam9lRZ7J5jvwADWQfvPAVeUpYOTx2NzSBJ7+mGDbipstuDNhfFM0UwQxGoVGQ5xLHdT1a44sL2FeK3ChivRnzIYcoJYieWPEENAIYVuaIDCxS5YYBXOBj2bCxf31IHh4DgshUKncHgEfLPKW8qmZl1NKXww6Imj+pfo4DMjNYYn1UiKhlVCLjnPbB0K4iuDefBDvszazRV76ME12YZXklijpqYPlyr12dtYjdE4NOq826E1ZRsnf9/flIcpDHw4HNQlqANSsXvnpKL4/Z3uwboEt0bk1FGLJaplnJnKauZSDyyI7D5X4d2IZ8K3PxSNmbPaggj/JGBd/aAJmFQSZPnC4Jf6YR4WBG/ueK9IiuKnLr/r8tbNh2u7Q/cKWBM9n90O34q+ME9YmoX6JK2fquYLuD86HUAgyOF85JTB2Tc5xXsTWogHI0vb2IEvQVgAuj8Qe/KDj3livQKeUw9IKMzeQjZP6r11p5gC0vxAddbQuhhs0Fcok7bNXzfrWjYWOfJLY8DMD8B3d06l1Rulgm1Unf/SNv7r04NkJBQeerIyRa/YRJsra6LOhBjzh6eK9FyL5EPjZslu+ee1FX/xRIuRQpPYfp686KtymsMCvJmoCrjKuOK8Amq6kXOxOGC2HrxOvfNX13tmzvBYX3qZbqs26ds2URQFzwqsaqHEhV+wolnpwZ/LTaMdjVcSXw+tGcI6fcOmyhAEka7BU4McV+SEr53r1Zc8yClUOofdEQvGFZz6JlXtSRi2r/5mnLD5BFYiJbcskxFV5+SZW5Vhc6kDS00E6Q6T1UzPBmdlM+FQ3Pp7WZyiTDTTDtcnw1FE4UQjwixkJ+CLkQs5JO/tzLmVuQXk2U1nmTW27vXush0De93r8dFMTH5d/nD3WDF+qFsm/NVQxoiy8X0HgEft6/CCaFhjzHe+bJhT16UZqwwvRQxanX4B3QcrUXhUvlwzC3xByaL3aea77Pxxrbllkc8Ijt8vS60GPXL7nnw7xnqmVpbsBWBrmMJNHtDrWAMkQH+J4q3c+x8N1Ensy7wqG/1rkBNVY+2gslKr5SzaoFpr7l7LpKtJ14IP1QLdjRrwadfh7WY3M/7ZG75CS1IMZTzQShBE0A9oWaalyuc6uS+HqRkA8LYR2BgKkUsdJOYHdmwyALK1RP8+PrYRX6gT7KccM4UU5FwaQqw/xkID5kkbv8dVbMD4dRql//gOSPcUwoqsb07OO4yZAoTvFWdmq+c691bbw8Q/QcJcA1KHaMt7cPmK2xGhPJwhpR1MlbNOIQk/j/RpNt/AC4tLPROBXSbzTV1B1WkihKh3vRZbPfunYuSW7fcckFjpJ8HrPIEzA5I8IseN2aZk5dEDc/rUoJ9QFsm7hGorIViCNz1haD50zJWNE7wwoOz/g7uRZdhTrq1KyEw98/BytaVJxljcn32kxfxq6GjN6hd3CZVI4D++upUvJsZu8bX5yUuKdU+vZO/OnQNRNYnJX1Ms2ULRDNF9wESFhKWVome2Mqazl8HBhK40oTSB73PsICQqjOW73FI0pU20W4YvuY3I5siZSmpL7XWdk/ZcD4njCQiSaaOlwFT8ZIZPGIdLo8LcM38zBAor9STEcmElC3516YqsPLgAMwviqXrex2gDDp/IFXfYWFdMQOsf91UT1NBMFw6IMRT4eNoU95Cqyom3PIKe4+HMvE2cWzkrLa5rKoO+i9Gq93nm8hFrJ50OWuAMhzKfiytgJ4EsXH9TA7fiZqEaf1Qo72s7wRWemJulQ8HSLw2xFFCypXSsK97lQHioITNKWckbPm7y+TPcEqmHH21zccXPuoILxWSY/IO+rtKh1mBqAlZQK9DF0lpKeJWYtLHJt/WBD9UBmPp6w+adfJGuHf7uRXRfLNsArxs80VRPqHm3NE4LvX8I0jbwb6Fwzubg62xDb2SHaW0Kf14RoajLbfPriTPd57j3v03ThP0WtU7VDD3ZVpmuxx8ZWm1henTkQKKEviDdrIohOG1qQfETx4Dy9/u8exnxMBd81UNRuPMHoZHeQRDlm3I2feyaGFFDG5fr0VQEwhHzq7je01yf6aXE8Y5PgGBgOFK3QhNcdetdEEMMWrKVr6arIFTP56MCG8WWLC0CYFnngndhgqB4Gc9yeZBGpNQsykFNCkZ18KlXJb3gdaoigfCo2DUH4qKJhdk3F67U1wOXKetPB7SS3UUAhP8jnBSFyAemKNCcY/V6Lk/JSivbmERTU/aeKlJ5PaJBLtGO6GbV7Fdc/8ZPx/Gqo0Yne31LRcFZHftWcckAs3Sm2WM8+Co/T9l/eokAwPBUg6z5fZJkVQ6D+8I8eXOwa7gljilat1ScKZnhe92/rqPd59jInRJopVAWLaeA7qY152PnWeIjElKThcHuZQf3qOleXaXZML8LNqptLgB3yvFcPB9OqG6QMvn03qGIp74+ADaboYa5G6d0GIL2Usx2zcTjkFLzVM4HqHjR7e+i/GIpwyNpXxDRxINYzu71mcoq1sxVyeLFmFXXtOlBgbMXFBMO5DzVK4jQjaOZeUAPR/vSDHe5vX56hrTsqvP35e4PTPqTaLtO6LRRrSweSKQmczChqbk67Ymjk8DR9o9d9lEaaaIsh5gt97bPJ2tNsxKnejj0NwxzuvnWORixnoFi8DUNgD5rWkAe5cBp1Y90K2qGB0vYxaFytG+3bTt3WXWaNhN9eMMA26v5uFNgFHKBvx0p+BTQOvFovOdaMtmnBkn7z66fZr5ZyWsJh2RowDz7zjqQMiClE8a/H6z0F5/YG5Oe7fkKzs9kQbxGLrTzLh+i3lf3wgNSsLHgUEsOCSNJPn4KZFqQOhBPJRhOwYcP+GpHibsaFsouyDhI7S9A+AJzFn83SvgY4KCqSpCXOvtLXPujlcNxFURm2+7o/CICE3USMsI/YlAti98yRGy4lXIr4NIJpt23fIrf0485urUkuosBONp8uCdWDGEjgpCWI0qGQdcoIZyw1N36LWrgYWgtbsgeKui//TTyIZw8QKdlammA+GMqxdM4I9Tj9OxBEhosocqwroxI48GonAyfV00Cmt1o78OEI5y+rSXHAzCIB9sU9Ug1Ca6XwvVSZnmiR9JXXEJQZYK1RIEIiqc9SOmfkmpk7Jbe39Ac1KSLNB/dYDMtXmJe9QpzwYj+PA+D9g3MIarLnfW9QG3JYHMnYFH5u9bqQ5kpBLpN4uS/PTmoTSA1SZ138d+rJcmnL/VNPNDkwY1JNcRZB1hSxOJKyXmkROG3MfnjBdsfd35eLA0L+QNZMDLQeIXjLKIpeAdiH3g6RtA85OjzD7HjP/Ui0LdLgKesLqcXuyfc50vnzoHtbon5KHfhvTqHxcHnPI93DYbnC5ALIKNk7+nXQ4r/aZaJ1sptX9veo4ZP+JcomaIQbA18VdETEvQwDeYaoz6S5Eg5DEk/4TlO5Tr8x71xwKQmxYr9Bkp6FIIQWYN3dP+UbD0zj9TPT+YQ5APUIeZ3VYg9yrobAauEZgXsVyeomge1tOgWI5pFm2p2HLLJ+yZJTBh2DSi+bHm21qBFI8VBa8RBLLLN+1TGbIsyAz80XwKNyw00UVsLlbubm3cNPSGftVYPIvpCpP9UFNR3RCwVNgjUTUMK6rOpU/n36jYeulLfEgCCwZ9vh7YpRGSsQd+KPCHXp13sD183hx6iFUdf5Jf4dLEovLUhjl5aznqj26d/eqgJVPRIqhD3KWQYKumMyd3GKZWDEINfobcZ5AOzMCx6JSz4Pzcc6rYz2semEtuF/bgpD9Q5sHkMDfUAp9ve5qrRKiw9bo5CIB9YayTOl9nVF2bgqmxQa1Df3yWZMVN/4QWauxfE6dfnvtGLB/vuIqGR475z+5OH6BS9kGNrTvdAYaNT2usQjV92VXVwBeVgx+FBpmFlx52F567590Hb0tEIUYSlXDVDi4VujSHTqYnP0SdSr1VwROxtIySFX971IJGJLiKkhXaCU7RfzD4lTQE5Q7lFTwUpF4bB3sL2THQFhnSgvJkSYF5w8bXPnK6wxKvWaj4uetoBw8lEgoHYBA1FS+5gSF3R+8jrc1M/KwrM26hbckjgfUI1Kfge692nl7XgVAEGKRajLOcZQ4+rKKNS61d/W1dbNyDtOog23w4yxYo8W5ZUuNiXpAadBworTGTGGgIldl7iJnOm08Ow3SlNnjbo5Fkbz2A+cJ8UN6iPUl0+y3orGBeFIAJTgM/T5MmyoYp860sJVVJiEI12mutcUX2rzK7DQDz1gorCL8JUXmQJq5RTIcMqpKjrxPgNF6vMjX06JnueANLNeP/luiWrhYK7UratCk4FDq7o0JohbmzAtHD+x5z98Far978qu2+MKbZU66hOGwiypXctatb1/nUV+NMBJOtoj5BZPMtseRBC3KSdeGEfEH4BkU93rXcSMCli6EKg2OCRpcTBZNzi8JJaIZpdo7xwoZ1MB7c294r6UPwk7VODCGongb3SDJmLaq7h9H5JiHs4Q7m0GitpYgyv/5tzsguiJ7SilQtTFsDqfGowdiljJVtMvuZ5aJa4kgdKSs4Ih9vgF4wfBX6/lLz6Y5iuODBaKQhBIzD09EToIdK0HCf0Yz+AvwnSbRv6ETMOWw/1INLjhcflqno2NfcKaPUDDtcoNBn2v47WV3ybY5hRfpw2UQ/kh60AfKMdOgFn7s3/Km1e0i0k+45e2Y/UztjgkIz8pxifGvfKCif/hoiwRAdhv7B2PpW8SajUKwRLKsYhDBRpeH3oAPvD8+s76vE1TG6XfDKWHoG0ozR7CHafqDNv8xVWpuj2/BX9Pppmy2B/3OW7iPIUO/h95Me7c5i6Z/Klo/xhU0catzAGhtBX3DapfA6Dud2sWOhj+4iGanZQ8qkce8DDlO4/LiR65t7H6lR7/N1xsYC6PSQQ/BQn5Asy8sG/E51e5pX0tQr4u4r3wbaFyJma8bAaYOrlApura8a56nDKGN1H5fgSfmr7s8QZAq9D8v2hKajC8nMzpGS08MX3+NxhlyJz1zfdsIeo1QMy62zW7O0mZ0u2+daKZLz+vaLE662Sz2ECrwyzV/tdulAOJ+FIJcYjlf3jj/k7EDuxGflnrQBWShC0iME8I9bMEu/GzR/PHKhE7yAsqzV/eNquaho503LCDBkzyq3s1D0PILI88/dP7iq6kxXQu7Fy3kNYeq1wIO6rOxltW9fHGFXjl/GWTngmFBaet4g6Spw1x6ym2lbT8SSzwpS0hl+B+c3N4KRWgM7OCCNZCXOOy5iI1mk5pdlMRxAFV7zJ62F6b6+OYeg1JlydWoAtv3HB9Z4/M9zdiok8DkKS1n1fGEHe0Hzxw7SBaSla98QTQwppHTOOGKnwTJHV1etlcJy1mXlJt9F83g+WrQ3FgV7QZf4RkpRRYOt3BLE/SLUXywHIqT7QjJW+vrIacyWG0VQTyD9iHUCwbUcM+Gwqi4so3HPUUCZ//xsjBggdiHdpFUtoXPO0AxEGn2pwFE4Wkz8P077xHjvXj3ti+LQ4UlVp9BpJmWXx4oBH7jscv3NK9nhMgOSCFI8XIEUc+Ny9vU4pPGnHZizhrXKD6qiSPAf+zxkHojf51JPxnqFj0x/FNBoP5TBXTsPcMgKvkRre1EUDiSJhMgBF05RAn/55RVKhK4NBsjcbqeotkXoRf7yIQt+F0l8ArMbIqaMkSTnLVWqeLr02nd68cmXiFrx+vQD2nWt7x3KclASh3BCXi4RHPlPBbh7lOM4sib0/KCJQeEBb5V3lsyg+OYze5A6D7BfK6BW/7XjtnQqTG2KcySgnn70B6TMeX+jtuc5aMWWbHV19uaeSS4gQLdfIOWCN5/voZ7qI7DY+KdpribNFPDN3FOgbBv9RXHBlOcQ1+QnhDFpKiW5QZHNK6N2nC36YNSicU/YBcvJliYIVtlWPZ0Y33hP54XMPCnIl9lVH8NhgGdPyn5XqP0FmnXaWA9FSpdFz8jFBQFqf6WV20eSJJkd7ugJnxGrJkgy2SG/3rYwOhY4yU0LSFOD6Rj3rlnQpIoNh3omagVmFejSjK2q7wHNUIFdtJTX7dq2YDbzEmrEdVhLyn7yR68bWSa7ETokUUBfGL662Yr37OEsI68WRnHqddL0elcU4pkSnru/fh06EBW3n+Rw5vHj+ZJma185Zi0egJy9Wq6FrLlExOo+jLdhzP3pgjDNpTO7R5pQSiZDz9BHk/oEty6G+Ndg3nlj64I0ThnCT+3RuljSrsYrlZri5itqPk400PUSwXG7AaZtnrADvG+hK/aOy59nUdSbEfaVSEHG0TR4Nm3mhC/d+c+9R6MV9B16qlT9g+0vDl3iVRRY4d+KWhbASrWwlV3roZFm+r8EUiAz6h3IdONDbb015giWJvzd97ZzqCD01nAD1jUMnDYEC1EP+7hMB1qU3Qqj+bIt/sBBsGz01jMmjREqNGarpxicmMS9nSY+foOUyTz9wJmZXlMw/stDgxfMfktp928vUfDApXweAWTtbVdeD0Ykl6BiRGYX6w1PFNDPIp0sV3OXnCY9m/TOoXWfaxEmytLbuTQM251z4r30Nylgo6fAjN3Yan9HmeeqUSQWrYMIfcVwM6zPEMPoKGZuoRqqF1u+5fqtXUb6njltsr9z8LoUdio8oTQKBYYyGqv9jVVKUuLfuk0y5c4U4zhkd29MCWLL7sPH4HpKVeGunqPNI9W3iRYpmJz0EWgK+wuzxK6UObDhMXCPH7zrtgy7aaLG8/7lwJrs2V9052s6wKYX058hHNtsIwzIzUjPRLy5lQKmw/j2f8bd0HGWTc3FGnBiS53Jh4zoBrR9jECIi/fMg6jgLdQNEBmVAYztnRs25IzYM+9KEQk7k8Z/stTdFE6yVjxpAdfoRNWQM6UE4yk3ZcVQ5YzUzicWyytwgjjXtzP2+LCbB2KEAax9hQgub7JFKXHpQMskwtAd3f04pF60FLhVyZKMCkvBauF/9fcRfm,iv:GM8lBK4+puIOHRkOTT3H/Kkp708YycF7NBy51817x/s=,tag:8KnHGBoGHTUmVtjpurr4Lg==,type:str]
+ssh_deletekeys: false
+ssh_keys:
+    # sops-encrypt
+    ed25519_private: ENC[AES256_GCM,data:heUWs2vs7z8plTct5sgVKs4/VIuimDYH3havNvggSVWDVs9bUk+LDy3tTB8T2HITI/vKCVFPcCMkT6Vno8zlgqYpduaRQrEViExvjUmbeC5LS27reUDUdcy5lewl7nTAlnQdr5iQH+z3Qd14Re1blw/eqHoFcDrZJXrZm1SA5gNhqK13GywMLZlzfd5SffGvk9cXQRMhKxN6JOIz0PIlwsuiojcHs+KdpwyuvloeoVCNPPZoxig2jtME5WthQlm24Hjd5OMqXqLia60AQXNPuvmEAi+MQcRYATX6bpBHqLi/eIK8dN63yRMtUOCt/bu7/bZ9XEO101C2oWx721M2DKo7cNcRKRLRw6TzhtIBtPUbbH0xpBad66AfvShArvV0l+fVgh8MiiupV81V+11yckbaPvgL8eHCj9n6MMm5fk2lpOY3VOrlmYZY9tQIvtPRP6l7rbx4qBuqa36wNOxmLIok8eTbOpPwTfFGOZcBhQc8FRfHva4S+5YCD5PPPwR1kV1z4Ah3DtMVnk4HJPiTryGzKPcvqvPoB/GK,iv:NI/fHbYZgGt7DhWUhVhdGcMkB5C9ezoxSZYyNJeb3Hc=,tag:jBumMRALHqeUJy4sMUG8Bw==,type:str]
+    ed25519_public: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIObYWV2oByM30vYbEEF6v2LBNaiVLeNrRpDFHC6ZY4Rd
+groups:
+    - docker
+users:
+    - name: teixe
+      gecos: Jorge Teixeira
+      groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo,docker
+      shell: /bin/bash
+      ssh_import_id:
+        - gh:jorgeteixe
+      sudo: ALL=(ALL) NOPASSWD:ALL
+apt:
+    sources:
+        docker:
+            source: deb [arch=arm64 signed-by=$KEY_FILE] https://download.docker.com/linux/ubuntu $RELEASE stable
+            keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        tailscale:
+            source: deb [arch=arm64 signed-by=$KEY_FILE] https://pkgs.tailscale.com/stable/ubuntu $RELEASE main
+            keyid: 2596A99EAAB33821893C0A79458CA832957F5868
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+packages:
+    - apt-transport-https
+    - curl
+    - gnupg
+    - git
+    - just
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin
+    - tailscale
+runcmd:
+    - su - teixe -c 'gpg --import /home/teixe/gpg-secret.asc'
+    - su - teixe -c 'echo "D5F7F738DAA8032D5B6CD6DB5BB088B9813BF479:6:" | gpg --import-ownertrust'
+    - rm /home/teixe/gpg-secret.asc
+    - service procps force-reload
+    - /etc/networkd-dispatcher/routable.d/50-tailscale
+    - systemctl enable --now docker
+    - curl -L https://github.com/getsops/sops/releases/download/v3.10.2/sops-v3.10.2.linux.arm64 -o /usr/local/bin/sops
+    - chmod 755 /usr/local/bin/sops
+    - tailscale up --ssh --accept-routes --advertise-tags=tag:homelab-host --advertise-exit-node --advertise-routes=172.20.10.0/24 --authkey $(cat /root/tailscale.authkey)
+    - git clone https://github.com/jorgeteixe/homelab.git /home/teixe/homelab
+    - chown -R teixe:teixe /home/teixe/homelab
+final_message: System configured after $UPTIME seconds
+sops:
+    lastmodified: "2025-07-25T20:30:07Z"
+    mac: ENC[AES256_GCM,data:o1QgDxcpCYyjwzSBd+A7/13Uxq2mppHIPo4btdEPuW3pYgNT3al7V0Tm8dhx0sjDrUM/4Y+CupQIwjCucuzDxDhdxi0H1sWVIRa7mu8EqLkg4VP1jGIL12IfGzqNJ8S2DnmQNeDCgPsNHYHj7OjfeRjTCyE19R7TLyBf53yrXgE=,iv:twGrFbcy/4OP2Yt4IU1XyTYQUVQdZxUpfPqjuWQZd04=,tag:LUS6v4SzyJeNkVsaDx/+Qw==,type:str]
+    pgp:
+        - created_at: "2025-07-25T20:30:07Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hF4DR/nonxQYTxwSAQdADRZjPO+s88tfofoJSuVlnrERPfox+AH1apTjc0HO7jEw
+            51IXMLg98/87UIUMx4MhJMR4AgTLNxufiRyfdvBlUmZym0xeGns9pcxq1NRJaswy
+            1GgBCQIQS4e6adSYEQ2iWdtL+WNpCIG8EGQvOTvtTY0qV1Km2CdHJnQa9QtiIV3H
+            haVFcZYCwzOOK8/0cygCpC9pASQS/Ctq8HdEv/9HeItSAiQOQQ8sgNf+CuaVUmS8
+            oXp20e+xHefMdw==
+            =Yzwe
+            -----END PGP MESSAGE-----
+          fp: DB6C87F1F82881C053A9692F775C24835DEA222F
+        - created_at: "2025-07-25T20:30:07Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hQIMA1PyvA0ZNFOVARAAhRTybWEQwohrVrMLpt3cf+FQx6e1YyFD0L1E8hSrQ1If
+            hCJjZqaBcgM+4Iszhhnl82Bizdv3ZAbZ/nqBE3XPrESTVzMw9+LLGggMxHNW/UWw
+            Of7zVVE2fHzH9p9gHH6TJyvUQJoPFVZGubXHfFhVpTsxF1vL+By6BLUow9AcB6tj
+            yJ4zpQ3N+eq5zFTb0MkERKbiUERcIefsBy1PFvvON2Cl293Nv8s/BdtlXiYBCZuG
+            Xpz2OT++siZyIiNV2+D8IzQq/J3m4DuKBOTVEuYLGBrcYPD6khKmuf1Jmn23EFPi
+            RqNlKGnF6HqQCcPNUjL1JcjIFUhSN9aondWmEuWkyOg/9iwQWh7OkjT9GIjsZcv5
+            OHDZRj3Y9W+REH3SC5a2tPn8fJ6qaLzl1f8ldn7tyw2tnF8k7FUeSvoZpcmLsXwy
+            gl2zOyGDRHDl+Df/+oaQGFCaYqyPd3bFt5XmRIjVsEPnggdJnQpRXJCOAlhMxNp6
+            bfxZ619yAqMMzQKisSTFJULyCFkK63ASrm8dOgmirlkW4myCqA6kOn/vWD3tLZ0A
+            /X9dEK5uGUvhkfYYUd3FcHdYUR0wt02aNe4DodYPsU0ASq4ii4al+dAgKpfvLDnc
+            cbVXqzXqRQhfYbiR+MYxBkaOF4ByGw78s0kB6nz6GY5wvSMLi2gtoPTr4eyYwP/U
+            aAEJAhBIGrF3RPWzAoCqcORIbUgtiRY9Si+pdx+zEZv0dwPNBVFI4XmM++czQJ11
+            DvxffbmegYiDzWu7v53fqhGCdxKzF288eQd3VUXOehb7svP1nKNiFcmh0k2Ir5/3
+            83+q1LDUyZmM
+            =VBgY
+            -----END PGP MESSAGE-----
+          fp: D5F7F738DAA8032D5B6CD6DB5BB088B9813BF479
+    encrypted_comment_regex: sops-encrypt
+    version: 3.10.2

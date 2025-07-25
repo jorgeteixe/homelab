@@ -2,13 +2,6 @@ name: Docker Compose Apply
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - .env.enc
-      - docker-compose.yml
-      - config/**
 
 jobs:
   acls:

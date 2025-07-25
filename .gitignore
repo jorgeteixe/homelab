@@ -1,2 +1,6 @@
-.env
-data/
+# flash script caches
+*.img.xz
+SHA256SUMS
+
+# cloud-init user-data unencrypted
+cloud-init/user-data

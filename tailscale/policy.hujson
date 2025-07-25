@@ -3,17 +3,23 @@
 	"tagOwners": {
 		"tag:homelab-host": ["jorgeteixe@github"],
 		"tag:container":    ["jorgeteixe@github"],
-		"tag:ci":           ["jorgeteixe@github"],
+		"tag:ci":           ["jorgeteixe@github"]
 	},
 	"grants": [
-		{"src": ["*"], "dst": ["*"], "ip": ["*"]},
+		{"src": ["*"], "dst": ["*"], "ip": ["*"]}
 	],
 	"ssh": [
 		{
 			"action": "accept",
-			"src":    ["tag:ci"],
+			"src":    ["tag:ci", "jorgeteixe@github"],
 			"dst":    ["tag:homelab-host"],
-			"users":  ["teixe"],
-		},
+			"users":  ["teixe"]
+		}
 	],
+	"autoApprovers": {
+		"routes": {
+			"172.20.10.0/24": ["tag:homelab-host"]
+		},
+		"exitNode": ["tag:homelab-host"]
+	}
 }

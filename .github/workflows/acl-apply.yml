@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - policy.hujson
+      - tailscale/policy.hujson
 
 jobs:
   acls:
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           sparse-checkout: |
-            policy.hujson
+            tailscale/policy.hujson
           sparse-checkout-cone-mode: false
 
       - name: Test ACL
@@ -25,6 +25,7 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET}}
           tailnet: ${{ secrets.TS_TAILNET }}
+          policy-file: tailscale/policy.hujson
           action: test
 
       - name: Deploy ACL
@@ -33,4 +34,5 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET}}
           tailnet: ${{ secrets.TS_TAILNET }}
+          policy-file: tailscale/policy.hujson
           action: apply
