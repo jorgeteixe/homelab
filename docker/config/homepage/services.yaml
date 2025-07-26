@@ -3,6 +3,9 @@
       icon: https://manual.calibre-ebook.com/_static/logo.png
       href: https://calibre.lab.teixe.es/
       description: Ebook management
+      siteMonitor: http://calibre-web-automated:8083/
+      server: my-docker
+      container: calibre-web-automated
       widget:
         type: calibreweb
         url: http://calibre-web-automated:8083
@@ -11,7 +14,13 @@
   - Book Downloader:
       href: https://book-downloader.lab.teixe.es/
       description: Torrent downloader
+      siteMonitor: http://cwa-book-downloader:8084/
+      server: my-docker
+      container: cwa-book-downloader
   - OpenBooks:
       href: https://openbooks.lab.teixe.es/
       description: IRC downloader
+      siteMonitor: http://openbooks:80/
+      server: my-docker
+      container: openbooks
 
