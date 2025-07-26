@@ -13,7 +13,10 @@ services:
     image: ghcr.io/gethomepage/homepage
     container_name: homepage
     volumes:
-      - ./config/homepage:/app/config
+      - ./config/homepage/bookmarks.yaml:/app/config/bookmarks.yaml:ro
+      - ./config/homepage/docker.yaml:/app/config/docker.yaml:ro
+      - ./config/homepage/services.yaml:/app/config/services.yaml:ro
+      - ./config/homepage/settings.yaml:/app/config/settings.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: lab.teixe.es
