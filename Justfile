@@ -20,7 +20,9 @@ decrypt-dotenv:
   sops --decrypt --input-type dotenv --output-type dotenv docker/.env.enc > docker/.env
 
 fetch-updates:
-  git pull
+  git fetch
+  sudo git reset --hard origin/main
+  sudo git clean -fd
 
 [working-directory: 'docker']
 docker-up: fetch-updates decrypt-dotenv
