@@ -19,12 +19,10 @@ encrypt-dotenv:
 decrypt-dotenv:
   sops --decrypt --input-type dotenv --output-type dotenv docker/.env.enc > docker/.env
 
-clean-update:
-  git fetch origin
-  git reset --hard origin/main
-  git clean -fd
+fetch-updates:
+  git pull
 
 [working-directory: 'docker']
-docker-up: clean-update decrypt-dotenv
+docker-up: fetch-updates decrypt-dotenv
   docker compose pull
   docker compose up -d --build --remove-orphans
