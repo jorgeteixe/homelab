@@ -1,0 +1,17 @@
+- Books:
+  - Calibre-Web:
+      icon: https://manual.calibre-ebook.com/_static/logo.png
+      href: https://calibre.lab.teixe.es/
+      description: Ebook management
+      widget:
+        type: calibreweb
+        url: http://your.calibreweb.host:port
+        username: Jorge
+        password: {{HOMEPAGE_VAR_CALIBRE_PASSWORD}}
+  - Book Downloader:
+      href: https://book-downloader.lab.teixe.es/
+      description: Torrent downloader
+  - OpenBooks:
+      href: https://openbooks.lab.teixe.es/
+      description: IRC downloader
+

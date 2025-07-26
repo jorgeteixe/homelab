@@ -9,6 +9,15 @@ services:
       homelab:
         ipv4_address: 172.20.10.254
 
+  homepage:
+    image: ghcr.io/gethomepage/homepage
+    container_name: homepage
+    volumes:
+      - ./config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: lab.teixe.es
+
   caddy:
     container_name: caddy
     build: ./config/caddy/
