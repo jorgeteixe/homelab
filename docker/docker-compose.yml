@@ -17,6 +17,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: lab.teixe.es
+    networks:
+      - homelab
 
   caddy:
     container_name: caddy
