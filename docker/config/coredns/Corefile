@@ -2,7 +2,3 @@ lab.teixe.es. {
 	rewrite name regex "^(.*\.)?lab\.teixe\.es\.$" caddy. answer auto
 	forward . 127.0.0.11
 }
-
-. {
-	block
-}
