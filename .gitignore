@@ -7,4 +7,4 @@ cloud-init/user-data
 
 # docker dotenv and state
 docker/.env
-docker/state
+docker/data
