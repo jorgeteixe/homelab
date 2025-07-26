@@ -1,4 +1,4 @@
-name: Sync Tailscale ACLs
+name: Sync Tailscale ACL
 
 on:
   workflow_dispatch:
@@ -9,8 +9,8 @@ on:
       - tailscale/policy.hujson
 
 jobs:
-  acls:
-    name: Sync Tailscale ACLs
+  acl-apply:
+    name: Sync Tailscale ACL
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

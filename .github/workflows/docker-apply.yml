@@ -2,9 +2,14 @@ name: Docker Compose Apply
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - docker/**
 
 jobs:
-  acls:
+  docker-apply:
     name: Docker Compose Apply
     runs-on: ubuntu-latest
     steps:
@@ -17,4 +22,4 @@ jobs:
           tags: tag:ci
 
       - name: Execute CI Update Script
-        run: tailscale ssh teixe@pi-homelab /home/teixe/homelab/ci-update.sh
+        run: tailscale ssh teixe@pi-homelab just --justfile homelab/Justfile docker-up
