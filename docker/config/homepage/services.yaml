@@ -5,7 +5,7 @@
       description: Ebook management
       widget:
         type: calibreweb
-        url: http://your.calibreweb.host:port
+        url: http://calibre-web-automated:8083
         username: Jorge
         password: {{HOMEPAGE_VAR_CALIBRE_PASSWORD}}
   - Book Downloader:
