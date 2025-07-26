@@ -9,18 +9,76 @@ services:
       homelab:
         ipv4_address: 172.20.10.254
 
-  nginx:
-    container_name: nginx
-    image: nginx:latest
+  caddy:
+    container_name: caddy
+    build: ./config/caddy/
     restart: unless-stopped
+    # See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+    cap_add:
+      - net_admin
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+    volumes:
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+    networks:
+      - homelab
+
+  calibre-web-automated:
+    container_name: calibre-web-automated
+    image: crocodilestick/calibre-web-automated
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+    volumes:
+      - ./data/calibre/config:/config
+      - ./data/calibre/ingest:/cwa-book-ingest
+      - ./data/calibre/library:/calibre-library
+    networks:
+      - homelab
+
+  cwa-book-downloader:
+    container_name: cwa-book-downloader
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader
+    depends_on:
+      - calibre-web-automated
+    environment:
+      FLASK_PORT: 8084
+      LOG_LEVEL: info
+      BOOK_LANGUAGE: en,es
+      USE_BOOK_TITLE: true
+      TZ: Europe/Madrid
+      APP_ENV: prod
+      UID: 1000
+      GID: 100
+      CWA_DB_PATH: /auth/app.db
+    restart: unless-stopped
+    volumes:
+      - ./data/calibre/ingest:/cwa-book-ingest
+      - ./data/calibre/config/app.db:/auth/app.db:ro
+    networks:
+      - homelab
+
+  openbooks:
+    image: evanbuss/openbooks
+    container_name: openbooks
+    command: --persist --name ${OPENBOOKS_NAME}
+    restart: unless-stopped
+    volumes:
+      - ./data/calibre/ingest:/books/books
     networks:
       - homelab
 
 networks:
   homelab:
     name: homelab
+    driver: macvlan
+    driver_opts:
+      parent: eth0
     ipam:
       config:
         - subnet: 172.20.10.0/24
-          ip_range: 172.20.10.0/24
           gateway: 172.20.10.1

@@ -2,7 +2,6 @@
 {
 	"tagOwners": {
 		"tag:homelab-host": ["jorgeteixe@github"],
-		"tag:container":    ["jorgeteixe@github"],
 		"tag:ci":           ["jorgeteixe@github"]
 	},
 	"grants": [

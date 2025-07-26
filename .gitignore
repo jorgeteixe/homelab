@@ -4,3 +4,7 @@ SHA256SUMS
 
 # cloud-init user-data unencrypted
 cloud-init/user-data
+
+# docker dotenv and state
+docker/.env
+docker/state

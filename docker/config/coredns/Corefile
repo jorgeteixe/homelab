@@ -4,24 +4,5 @@ lab.teixe.es. {
 }
 
 . {
-	cache 30
-	forward . 127.0.0.11
-
-	forward . tls://1.1.1.1 tls://1.0.0.1 {
-		policy random
-		tls_servername cloudflare-dns.com
-		health_check 5s
-	}
-
-	forward . tls://9.9.9.9 tls://149.112.112.112 {
-		policy random
-		tls_servername dns.quad9.net
-		health_check 5s
-	}
-
-	forward . tls://94.140.14.14 tls://94.140.15.15 {
-		policy random
-		tls_servername dns.adguard.com
-		health_check 5s
-	}
+	block
 }
