@@ -27,6 +27,16 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy openbooks:80
 	}
 
+	@actual host actual.lab.teixe.es
+	handle @actual {
+		reverse_proxy actual-server:5006
+	}
+
+	@kitchenowl host kitchenowl.lab.teixe.es
+	handle @kitchenowl {
+		reverse_proxy kitchenowl:8080
+	}
+
 	@ping host ping.lab.teixe.es
 	handle @ping {
 		respond "pong!"

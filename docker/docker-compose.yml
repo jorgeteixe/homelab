@@ -10,8 +10,8 @@ services:
         ipv4_address: 172.20.10.254
 
   homepage:
-    image: ghcr.io/gethomepage/homepage
     container_name: homepage
+    image: ghcr.io/gethomepage/homepage
     volumes:
       - ./config/homepage/bookmarks.yaml:/app/config/bookmarks.yaml:ro
       - ./config/homepage/docker.yaml:/app/config/docker.yaml:ro
@@ -78,12 +78,38 @@ services:
       - homelab
 
   openbooks:
-    image: evanbuss/openbooks
     container_name: openbooks
+    image: evanbuss/openbooks
     command: --persist --name ${OPENBOOKS_IRC_NAME}
     restart: unless-stopped
     volumes:
       - ./data/calibre/ingest:/books/books
+    networks:
+      - homelab
+
+  actual-server:
+    container_name: actual-server
+    image: actualbudget/actual-server
+    restart: unless-stopped
+    volumes:
+      - ./data/actual:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'node src/scripts/health-check.js']
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - homelab
+
+  kitchenowl:
+    container_name: kitchenowl
+    image: tombursch/kitchenowl
+    restart: unless-stopped
+    environment:
+      - JWT_SECRET_KEY=${KITCHENOWL_JWT_SECRET_KEY}
+    volumes:
+      - ./data/kitchenowl:/data
     networks:
       - homelab
 

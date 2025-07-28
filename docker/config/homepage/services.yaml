@@ -26,4 +26,21 @@
       server: my-docker
       container: openbooks
       showStats: false
-
+- Budget:
+  - Actual Budget:
+      icon: https://github.com/actualbudget.png
+      href: https://actual.lab.teixe.es/
+      description: Personal finance management
+      siteMonitor: http://actual-server:5006/
+      server: my-docker
+      container: actual-server
+      showStats: false
+- Kitchen:
+  - KitchenOwl:
+      icon: https://kitchenowl.org/favicon/favicon_hu_d358ca32899a9fb0.png
+      href: https://kitchenowl.lab.teixe.es/
+      description: Recipe management
+      siteMonitor: http://kitchenowl:8080/
+      server: my-docker
+      container: kitchenowl
+      showStats: false
