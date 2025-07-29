@@ -129,6 +129,8 @@ services:
       PGID: 1000
       TZ: Europe/Madrid
       BASE_URL: https://mealie.lab.teixe.es
+    networks:
+      - homelab
 
 networks:
   homelab:
