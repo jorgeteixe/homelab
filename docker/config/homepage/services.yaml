@@ -44,3 +44,11 @@
       server: my-docker
       container: kitchenowl
       showStats: false
+  - Mealie:
+      icon: https://github.com/mealie-recipes.png
+      href: https://mealie.lab.teixe.es/
+      description: Recipe management
+      siteMonitor: http://mealie:9000/
+      server: my-docker
+      container: mealie
+      showStats: false

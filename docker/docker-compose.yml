@@ -113,6 +113,23 @@ services:
     networks:
       - homelab
 
+  mealie:
+    container_name: mealie
+    image: ghcr.io/mealie-recipes/mealie
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1000M # Recommended by docs
+    volumes:
+      - ./data/mealie:/app/data/
+    environment:
+      ALLOW_SIGNUP: "false"
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+      BASE_URL: https://mealie.lab.teixe.es
+
 networks:
   homelab:
     name: homelab

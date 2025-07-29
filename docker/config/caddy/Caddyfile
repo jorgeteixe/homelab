@@ -39,6 +39,11 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy kitchenowl:8080
 	}
 
+	@mealie host mealie.lab.teixe.es
+	handle @mealie {
+		reverse_proxy mealie:9000
+	}
+
 	@ping host ping.lab.teixe.es
 	handle @ping {
 		respond "pong!"
