@@ -4,8 +4,8 @@ default:
 flash DEVICE:
   ./cloud-init/flash.sh {{DEVICE}}
 
-encrypt: encrypt-user-data encrypt-dotenv
-decrypt: decrypt-user-data decrypt-dotenv
+encrypt: encrypt-user-data encrypt-dotenv encrypt-adventurelog-dotenv
+decrypt: decrypt-user-data decrypt-dotenv decrypt-adventurelog-dotenv
 
 encrypt-user-data:
   sops --encrypt --input-type yaml --output-type yaml --encrypted-comment-regex 'sops-encrypt' cloud-init/user-data > cloud-init/user-data.enc
@@ -19,12 +19,18 @@ encrypt-dotenv:
 decrypt-dotenv:
   sops --decrypt --input-type dotenv --output-type dotenv docker/.env.enc > docker/.env
 
+encrypt-adventurelog-dotenv:
+  sops --encrypt --input-type dotenv --encrypted-comment-regex 'sops-encrypt'  docker/config/adventurelog/.env > docker/config/adventurelog/.env.enc
+
+decrypt-adventurelog-dotenv:
+  sops --decrypt --input-type dotenv --output-type dotenv --encrypted-comment-regex 'sops-encrypt'  docker/config/adventurelog/.env.enc > docker/config/adventurelog/.env
+
 fetch-updates:
   git fetch
   sudo git reset --hard origin/main
   sudo git clean -fd
 
 [working-directory: 'docker']
-docker-up: fetch-updates decrypt-dotenv
+docker-up: fetch-updates decrypt-dotenv decrypt-adventurelog-dotenv
   docker compose pull
   docker compose up -d --build --remove-orphans

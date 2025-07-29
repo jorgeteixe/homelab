@@ -132,6 +132,39 @@ services:
     networks:
       - homelab
 
+  adventurelog-web:
+    container_name: adventurelog-web
+    image: ghcr.io/seanmorley15/adventurelog-frontend:latest
+    restart: unless-stopped
+    env_file: config/adventurelog/.env
+    depends_on:
+      - adventurelog-server
+    networks:
+      - homelab
+
+  adventurelog-db:
+    image: tobi312/rpi-postgresql-postgis:15-3.3-alpine-arm
+    container_name: adventurelog-db
+    restart: unless-stopped
+    env_file: config/adventurelog/.env
+    volumes:
+      - ./data/adventurelog/postgres:/var/lib/postgresql/data/
+    networks:
+      - homelab
+
+  adventurelog-server:
+    #build: ./backend/
+    image: ghcr.io/seanmorley15/adventurelog-backend:latest
+    container_name: adventurelog-server
+    restart: unless-stopped
+    env_file: config/adventurelog/.env
+    depends_on:
+      - adventurelog-db
+    volumes:
+      - ./data/adventurelog/adventurelog:/code/media/
+    networks:
+      - homelab
+
 networks:
   homelab:
     name: homelab

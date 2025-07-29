@@ -52,3 +52,12 @@
       server: my-docker
       container: mealie
       showStats: false
+- Travel:
+  - AdventureLog:
+      icon: https://adventurelog.app/adventurelog.svg
+      href: https://adventurelog.lab.teixe.es/
+      description: Travel planning and logging
+      siteMonitor: http://adventurelog-web:3000/
+      server: my-docker
+      container: adventurelog-web
+      showStats: false

@@ -1,6 +1,5 @@
 {
 	admin off
-	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 	log {
 		format console
 	}
@@ -42,6 +41,16 @@ lab.teixe.es, *.lab.teixe.es {
 	@mealie host mealie.lab.teixe.es
 	handle @mealie {
 		reverse_proxy mealie:9000
+	}
+
+	@adventurelog host adventurelog.lab.teixe.es
+	handle @adventurelog {
+		@frontend {
+			not path /media* /admin* /static* /accounts*
+		}
+		reverse_proxy @frontend adventurelog-web:3000
+
+		reverse_proxy adventurelog-server:80
 	}
 
 	@ping host ping.lab.teixe.es
