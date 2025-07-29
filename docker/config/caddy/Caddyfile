@@ -6,6 +6,13 @@
 	}
 }
 
+http://calibre.lab.teixe.es {
+	@kobo-sync path /kobo
+	handle @kobo-sync {
+		reverse_proxy calibre-web-automated:8083
+	}
+}
+
 lab.teixe.es, *.lab.teixe.es {
 	@default host lab.teixe.es
 	handle @default {
