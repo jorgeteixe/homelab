@@ -6,13 +6,6 @@
 	}
 }
 
-http://calibre.lab.teixe.es {
-	@kobo-sync path /kobo
-	handle @kobo-sync {
-		reverse_proxy calibre-web-automated:8083
-	}
-}
-
 lab.teixe.es, *.lab.teixe.es {
 	@default host lab.teixe.es
 	handle @default {
@@ -21,7 +14,9 @@ lab.teixe.es, *.lab.teixe.es {
 
 	@calibre host calibre.lab.teixe.es
 	handle @calibre {
-		reverse_proxy calibre-web-automated:8083
+		reverse_proxy calibre-web-automated:8083 {
+			header_up X-Scheme https
+		}
 	}
 
 	@book-downloader host book-downloader.lab.teixe.es
