@@ -42,7 +42,7 @@ services:
 
   calibre-web-automated:
     container_name: calibre-web-automated
-    image: crocodilestick/calibre-web-automated
+    build: ./config/calibre-web-automated/
     restart: unless-stopped
     environment:
       - PUID=1000
