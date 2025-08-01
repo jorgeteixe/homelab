@@ -42,7 +42,7 @@ services:
 
   calibre-web-automated:
     container_name: calibre-web-automated
-    build: ./config/calibre-web-automated/
+    image: crocodilestick/calibre-web-automated
     restart: unless-stopped
     environment:
       - PUID=1000
@@ -153,7 +153,6 @@ services:
       - homelab
 
   adventurelog-server:
-    #build: ./backend/
     image: ghcr.io/seanmorley15/adventurelog-backend:latest
     container_name: adventurelog-server
     restart: unless-stopped
