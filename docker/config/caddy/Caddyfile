@@ -1,5 +1,6 @@
 {
 	admin off
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 	log {
 		format console
 	}
