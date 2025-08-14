@@ -11,6 +11,7 @@ services:
 
   homepage:
     container_name: homepage
+    restart: unless-stopped
     image: ghcr.io/gethomepage/homepage
     volumes:
       - ./config/homepage/bookmarks.yaml:/app/config/bookmarks.yaml:ro
