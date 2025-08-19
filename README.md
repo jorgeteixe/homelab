@@ -10,31 +10,31 @@
 
 </div>
 
-This repository contains the complete infrastructure-as-code configuration for my personal Raspberry Pi 5 homelab. The setup includes automated deployment, secret management, and a collection of self-hosted services for productivity, media management, and home automation.
+This is my personal Raspberry Pi 5 homelab setup. It runs a bunch of self-hosted services that I actually use daily - everything from managing my ebook collection to tracking expenses and meal planning.
 
-> **Note**: This is a personal infrastructure repository. While suggestions via issues are welcome, pull requests are unlikely to be accepted as changes directly affect production services.
+> **Note**: This repo controls my actual running services, so while I'm happy to chat about the setup via issues, I probably won't accept pull requests since they'd mess with my stuff.
 
 ## Hardware network diagram
 
 ![Hardware Diagram](./docs/hw-gram.svg)
 
-## 🏠 Services
+## Services
 
-The homelab runs the following self-hosted services:
+Here's what's actually running on the Pi:
 
 | Service | Purpose | Access |
 |---------|---------|--------|
-| **[Homepage](https://github.com/gethomepage/homepage)** | Dashboard and service directory | `https://lab.teixe.es` |
-| **[Caddy](https://caddyserver.com/)** | Reverse proxy with automatic HTTPS | Internal |
-| **[CoreDNS](https://coredns.io/)** | DNS server for local resolution | `172.20.10.254` |
-| **[Calibre Web Automated](https://github.com/crocodilestick/calibre-web-automated)** | Ebook library management | Via Homepage |
-| **[Actual Budget](https://actualbudget.com/)** | Personal finance tracking | Via Homepage |
-| **[KitchenOwl](https://github.com/TomBursch/kitchenowl)** | Grocery list and meal planning | Via Homepage |
-| **[Mealie](https://mealie.io/)** | Recipe management | Via Homepage |
-| **[AdventureLog](https://github.com/seanmorley15/AdventureLog)** | Travel and adventure tracking | Via Homepage |
-| **[OpenBooks](https://github.com/evan-buss/openbooks)** | IRC book search and download | Via Homepage |
+| **[Homepage](https://github.com/gethomepage/homepage)** | Nice dashboard for everything | `https://lab.teixe.es` |
+| **[Caddy](https://caddyserver.com/)** | Handles SSL and routing | Internal |
+| **[CoreDNS](https://coredns.io/)** | Local DNS server | `172.20.10.254` |
+| **[Calibre Web Automated](https://github.com/crocodilestick/calibre-web-automated)** | My ebook library | Via Homepage |
+| **[Actual Budget](https://actualbudget.com/)** | Track spending | Via Homepage |
+| **[KitchenOwl](https://github.com/TomBursch/kitchenowl)** | Grocery lists and meal planning | Via Homepage |
+| **[Mealie](https://mealie.io/)** | Recipe collection | Via Homepage |
+| **[AdventureLog](https://github.com/seanmorley15/AdventureLog)** | Track trips and hikes | Via Homepage |
+| **[OpenBooks](https://github.com/evan-buss/openbooks)** | Book downloads from IRC | Via Homepage |
 
-## 📁 Repository Structure
+## What's in here
 
 ```
 .
@@ -55,113 +55,102 @@ The homelab runs the following self-hosted services:
 └── Justfile           # Task automation recipes
 ```
 
-## 🚀 Quick Start
+## Getting started
 
-### Prerequisites
+### You'll need
 
-- [Just](https://github.com/casey/just) - Command runner
-- [SOPS](https://github.com/mozilla/sops) - Secret management
+- [Just](https://github.com/casey/just) for running commands
+- [SOPS](https://github.com/mozilla/sops) for managing secrets
 - [Docker](https://docs.docker.com/engine/install/) & [Docker Compose](https://docs.docker.com/compose/)
-- [GPG](https://gnupg.org/) for SOPS encryption
+- [GPG](https://gnupg.org/) for encryption
 
-### Initial Setup
+### Setup
 
-1. **Flash Raspberry Pi SD Card**
+1. **Flash the Pi**
    ```bash
    just flash /dev/sdX   # Replace with your SD card device
    ```
 
-2. **Configure Secrets**
+2. **Handle secrets**
    ```bash
-   # Decrypt existing secrets (requires proper SOPS keys)
+   # If you have my keys, decrypt existing secrets:
    just decrypt
    
-   # Or create new environment files:
-   cp docker/.env.example docker/.env
-   cp docker/config/adventurelog/.env.example docker/config/adventurelog/.env
-   # Edit the .env files with your values, then encrypt:
+   # Otherwise create your own .env files and encrypt them:
    just encrypt
    ```
 
-3. **Deploy Services**
+3. **Start everything**
    ```bash
-   just docker-up       # Pulls images and starts all services
+   just docker-up
    ```
 
-### Common Commands
+### Useful commands
 
-| Command | Description |
+| Command | What it does |
 |---------|-------------|
-| `just` | Show all available commands |
-| `just flash /dev/sdX` | Download Ubuntu, create bootable SD card with cloud-init |
-| `just encrypt` | Encrypt all secrets using SOPS |
-| `just decrypt` | Decrypt secrets for local development |
-| `just fetch-updates` | Fetch git updates |
-| `just docker-up` | Update from git, decrypt secrets, pull images, and start services |
+| `just` | Show all commands |
+| `just flash /dev/sdX` | Make a bootable Pi SD card |
+| `just encrypt` | Encrypt secrets |
+| `just decrypt` | Decrypt secrets |
+| `just fetch-updates` | Pull latest from git |
+| `just docker-up` | Update everything and restart services |
 
 
-## ⚙️ Architecture
+## How it works
 
 ### Networking
 
-The homelab uses a **macvlan network** to give containers routable addresses through Tailscale and the local router:
+I'm using macvlan so containers get real IP addresses that work with Tailscale:
 
-- **Network**: `172.20.10.0/24`
-- **Gateway**: `172.20.10.1`
-- **DNS Server**: `172.20.10.254` (CoreDNS container)
+- Network: `172.20.10.0/24`
+- Gateway: `172.20.10.1`  
+- DNS: `172.20.10.254` (the CoreDNS container)
 
-### Security
+### Security stuff
 
-- **Secret Management**: All sensitive data encrypted with [SOPS](https://github.com/mozilla/sops)
-- **Network Isolation**: Services communicate through internal Docker networks
-- **VPN Access**: Tailscale integration for secure remote access
-- **HTTPS**: Automatic SSL certificates via Caddy with Cloudflare DNS challenge
+- All secrets are encrypted with SOPS before going into git
+- Services talk to each other through Docker networks
+- External access goes through Tailscale VPN
+- Caddy handles SSL certificates automatically via Cloudflare
 
 ### Automation
 
-- **GitHub Actions**: Automatically applies Tailscale ACL changes and triggers deployments
-- **Docker Health Checks**: Service monitoring and automatic restarts
-- **Backup**: Configuration stored in Git, data volumes using separate backup strategy
+- GitHub Actions updates Tailscale rules and triggers deployments
+- Docker restarts unhealthy containers
+- Config lives in git, but you'll want to backup the data folders separately
 
-## 🛠️ Development
+## Development
 
-### Local Testing
+### Testing stuff locally
 
 ```bash
-# Validate docker-compose configuration
+# Check if compose file is valid
 docker compose config
 
-# Check service health
+# See what's running
 docker compose ps
 
-# View service logs
+# Watch logs
 docker compose logs -f [service_name]
 ```
 
-### Adding New Services
+### Adding a new service
 
-1. Add service definition to `docker/docker-compose.yml`
-2. Create service configuration in `docker/config/[service]/`
-3. Add service to Homepage dashboard configuration
-4. Update Caddyfile for external access if needed
+1. Add it to `docker/docker-compose.yml`
+2. Put config files in `docker/config/[service]/`  
+3. Add it to the Homepage dashboard
+4. Update Caddyfile if it needs external access
 5. Test deployment with `just docker-up`
 
-## 📝 Contributing
+## Contributing
 
-This repository serves as both documentation and actual infrastructure code. While the setup is personal:
+Since this controls my actual running infrastructure:
 
-- **Issues**: Bug reports and suggestions are welcome
-- **Discussions**: Questions about the setup or architecture are encouraged  
-- **Pull Requests**: Generally not accepted as changes affect production services
+- Issues with questions or suggestions are totally fine
+- Pull requests probably won't get merged since they'd break my stuff
+- But feel free to fork it and make it your own!
 
-## 📄 License
+## License
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
-
----
-
-<div align="center">
-
-**🏠 Powered by Raspberry Pi 5 • 🐳 Docker • ☁️ Self-hosted**
-
-</div>
+MIT license - do whatever you want with it.
