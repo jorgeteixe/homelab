@@ -25,6 +25,6 @@ fetch-updates:
   sudo git clean -fd
 
 [working-directory: 'docker']
-docker-up: fetch-updates decrypt-dotenv decrypt-adventurelog-dotenv
+docker-up: fetch-updates decrypt-dotenv
   docker compose pull
   docker compose up -d --build --remove-orphans
