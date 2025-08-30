@@ -2,7 +2,7 @@
 {
 	"tagOwners": {
 		"tag:homelab-host":   ["jorgeteixe@github"],
-		"tag:proxmox-router": ["jorgeteixe@github"],
+		"tag:mediaserver-host": ["jorgeteixe@github"],
 		"tag:ci":             ["jorgeteixe@github"]
 	},
 	"grants": [
@@ -12,15 +12,15 @@
 		{
 			"action": "accept",
 			"src":    ["tag:ci", "jorgeteixe@github"],
-			"dst":    ["tag:homelab-host", "tag:proxmox-router"],
+			"dst":    ["tag:homelab-host", "tag:mediaserver-host"],
 			"users":  ["teixe"]
 		}
 	],
 	"autoApprovers": {
 		"routes": {
 			"172.20.10.0/24": ["tag:homelab-host"],
-			"172.20.20.0/24": ["tag:proxmox-router"]
+			"172.20.20.0/24": ["tag:mediaserver-host"]
 		},
-		"exitNode": ["tag:homelab-host", "tag:proxmox-router"]
+		"exitNode": ["tag:homelab-host", "tag:mediaserver-host"]
 	}
 }
