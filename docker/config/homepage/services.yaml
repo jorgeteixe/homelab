@@ -52,12 +52,52 @@
       server: my-docker
       container: mealie
       showStats: false
-- Travel:
-  - AdventureLog:
-      icon: https://adventurelog.app/adventurelog.svg
-      href: https://adventurelog.lab.teixe.es/
-      description: Travel planning and logging
-      siteMonitor: http://adventurelog-web:3000/
+- Media:
+  - Jellyfin:
+      icon: https://github.com/jellyfin.png
+      href: https://jellyfin.lab.teixe.es/
+      description: Media server
+      siteMonitor: http://mediaserver:8096/
       server: my-docker
-      container: adventurelog-web
+      container: mediaserver
+      showStats: false
+  - qBittorrent:
+      icon: https://github.com/qbittorrent.png
+      href: https://qbittorrent.lab.teixe.es/
+      description: Torrent client
+      siteMonitor: http://mediaserver:8080/
+      server: my-docker
+      container: mediaserver
+      showStats: false
+  - Sonarr:
+      icon: https://github.com/sonarr.png
+      href: https://sonarr.lab.teixe.es/
+      description: TV show management
+      siteMonitor: http://mediaserver:8989/
+      server: my-docker
+      container: mediaserver
+      showStats: false
+  - Radarr:
+      icon: https://github.com/radarr.png
+      href: https://radarr.lab.teixe.es/
+      description: Movie management
+      siteMonitor: http://mediaserver:7878/
+      server: my-docker
+      container: mediaserver
+      showStats: false
+  - Lidarr:
+      icon: https://github.com/lidarr.png
+      href: https://lidarr.lab.teixe.es/
+      description: Music management
+      siteMonitor: http://mediaserver:8686/
+      server: my-docker
+      container: mediaserver
+      showStats: false
+  - Prowlarr:
+      icon: https://github.com/prowlarr.png
+      href: https://prowlarr.lab.teixe.es/
+      description: Indexer management
+      siteMonitor: http://mediaserver:9696/
+      server: my-docker
+      container: mediaserver
       showStats: false
