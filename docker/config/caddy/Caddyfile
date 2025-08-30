@@ -59,6 +59,37 @@ lab.teixe.es, *.lab.teixe.es {
 		respond "pong!"
 	}
 
+	# Mediaserver entries
+	@jellyfin host jellyfin.lab.teixe.es
+	handle @jellyfin {
+		reverse_proxy mediaserver:8096
+	}
+
+	@qbittorrent host qbittorrent.lab.teixe.es
+	handle @qbittorrent {
+		reverse_proxy mediaserver:8080
+	}
+
+	@sonarr host sonarr.lab.teixe.es
+	handle @sonarr {
+		reverse_proxy mediaserver:8989
+	}
+
+	@radarr host radarr.lab.teixe.es
+	handle @radarr {
+		reverse_proxy mediaserver:7878
+	}
+
+	@lidarr host lidarr.lab.teixe.es
+	handle @lidarr {
+		reverse_proxy mediaserver:8686
+	}
+
+	@prowlarr host prowlarr.lab.teixe.es
+	handle @prowlarr {
+		reverse_proxy mediaserver:9696
+	}
+
 	# Fallback for otherwise unhandled domains
 	handle {
 		abort
