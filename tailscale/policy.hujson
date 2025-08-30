@@ -1,8 +1,9 @@
 // This tailnet's ACLs are maintained in https://github.com/jorgeteixe/homelab
 {
 	"tagOwners": {
-		"tag:homelab-host": ["jorgeteixe@github"],
-		"tag:ci":           ["jorgeteixe@github"]
+		"tag:homelab-host":   ["jorgeteixe@github"],
+		"tag:proxmox-router": ["jorgeteixe@github"],
+		"tag:ci":             ["jorgeteixe@github"]
 	},
 	"grants": [
 		{"src": ["*"], "dst": ["*"], "ip": ["*"]}
@@ -11,14 +12,15 @@
 		{
 			"action": "accept",
 			"src":    ["tag:ci", "jorgeteixe@github"],
-			"dst":    ["tag:homelab-host"],
+			"dst":    ["tag:homelab-host", "tag:proxmox-router"],
 			"users":  ["teixe"]
 		}
 	],
 	"autoApprovers": {
 		"routes": {
-			"172.20.10.0/24": ["tag:homelab-host"]
+			"172.20.10.0/24": ["tag:homelab-host"],
+			"172.20.20.0/24": ["tag:proxmox-router"]
 		},
-		"exitNode": ["tag:homelab-host"]
+		"exitNode": ["tag:homelab-host", "tag:proxmox-router"]
 	}
 }
