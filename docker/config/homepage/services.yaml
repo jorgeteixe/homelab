@@ -57,47 +57,41 @@
       icon: https://github.com/jellyfin.png
       href: https://jellyfin.lab.teixe.es/
       description: Media server
-      siteMonitor: http://mediaserver:8096/
-      server: my-docker
-      container: mediaserver
+      siteMonitor: https://jellyfin.lab.teixe.es/
       showStats: false
-  - qBittorrent:
-      icon: https://github.com/qbittorrent.png
-      href: https://qbittorrent.lab.teixe.es/
-      description: Torrent client
-      siteMonitor: http://mediaserver:8080/
-      server: my-docker
-      container: mediaserver
+  - Threadfin:
+      icon: https://github.com/threadfin.png
+      href: https://threadfin.lab.teixe.es/
+      description: IPTV management
+      siteMonitor: https://threadfin.lab.teixe.es/
       showStats: false
   - Sonarr:
       icon: https://github.com/sonarr.png
       href: https://sonarr.lab.teixe.es/
       description: TV show management
-      siteMonitor: http://mediaserver:8989/
-      server: my-docker
-      container: mediaserver
+      siteMonitor: https://sonarr.lab.teixe.es/
       showStats: false
   - Radarr:
       icon: https://github.com/radarr.png
       href: https://radarr.lab.teixe.es/
       description: Movie management
-      siteMonitor: http://mediaserver:7878/
-      server: my-docker
-      container: mediaserver
+      siteMonitor: https://radarr.lab.teixe.es/
       showStats: false
   - Lidarr:
       icon: https://github.com/lidarr.png
       href: https://lidarr.lab.teixe.es/
       description: Music management
-      siteMonitor: http://mediaserver:8686/
-      server: my-docker
-      container: mediaserver
+      siteMonitor: https://lidarr.lab.teixe.es/
       showStats: false
   - Prowlarr:
       icon: https://github.com/prowlarr.png
       href: https://prowlarr.lab.teixe.es/
       description: Indexer management
-      siteMonitor: http://mediaserver:9696/
-      server: my-docker
-      container: mediaserver
+      siteMonitor: https://prowlarr.lab.teixe.es/
+      showStats: false
+  - qBittorrent:
+      icon: https://github.com/qbittorrent.png
+      href: https://qbittorrent.lab.teixe.es/
+      description: Torrent client
+      siteMonitor: https://qbittorrent.lab.teixe.es/
       showStats: false
