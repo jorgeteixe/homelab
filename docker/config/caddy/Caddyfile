@@ -55,13 +55,9 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy mediaserver:8096
 	}
 
-	@threadfin host threadfin.lab.teixe.es
-	handle @threadfin {
-		reverse_proxy mediaserver:34400 {
-			transport http {
-				versions 1.1
-			}
-		}
+	@tvheadend host tvheadend.lab.teixe.es
+	handle @tvheadend {
+		reverse_proxy mediaserver:34400
 	}
 
 	@qbittorrent host qbittorrent.lab.teixe.es
