@@ -59,6 +59,12 @@
       description: Media server
       siteMonitor: https://jellyfin.lab.teixe.es/
       showStats: false
+  - Jellyseerr:
+      icon: https://github.com/jellyseerr.png
+      href: https://jellyseerr.lab.teixe.es/
+      description: Media server
+      siteMonitor: https://jellyseerr.lab.teixe.es/
+      showStats: false
   - Sonarr:
       icon: https://github.com/sonarr.png
       href: https://sonarr.lab.teixe.es/

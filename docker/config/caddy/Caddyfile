@@ -55,6 +55,11 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy mediaserver:8096
 	}
 
+	@jellyseerr host jellyseerr.lab.teixe.es
+	handle @jellyseerr {
+		reverse_proxy mediaserver:5055
+	}
+
 	@qbittorrent host qbittorrent.lab.teixe.es
 	handle @qbittorrent {
 		reverse_proxy mediaserver:8080
