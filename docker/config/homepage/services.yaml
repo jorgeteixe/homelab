@@ -77,6 +77,12 @@
       description: Movie management
       siteMonitor: https://radarr.lab.teixe.es/
       showStats: false
+  - Bazarr:
+      icon: https://github.com/bazarr.png
+      href: https://bazarr.lab.teixe.es/
+      description: Subtitle management
+      siteMonitor: https://bazarr.lab.teixe.es/
+      showStats: false
   - Lidarr:
       icon: https://github.com/lidarr.png
       href: https://lidarr.lab.teixe.es/

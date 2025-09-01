@@ -80,6 +80,11 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy mediaserver:8686
 	}
 
+	@bazarr host bazarr.lab.teixe.es
+	handle @bazarr {
+		reverse_proxy mediaserver:6767
+	}
+
 	@prowlarr host prowlarr.lab.teixe.es
 	handle @prowlarr {
 		reverse_proxy mediaserver:9696
