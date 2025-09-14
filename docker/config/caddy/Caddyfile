@@ -90,6 +90,12 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy mediaserver:9696
 	}
 
+
+	@navidrome host navidrome.lab.teixe.es
+	handle @navidrome {
+		reverse_proxy mediaserver:4533
+	}
+
 	# Fallback for otherwise unhandled domains
 	handle {
 		abort
