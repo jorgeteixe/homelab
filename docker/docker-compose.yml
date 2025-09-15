@@ -39,7 +39,8 @@ services:
       - ./data/caddy/data:/data
       - ./data/caddy/config:/config
     networks:
-      - homelab
+      homelab:
+        ipv4_address: 172.20.10.3
 
   calibre-web-automated:
     container_name: calibre-web-automated
