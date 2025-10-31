@@ -96,6 +96,11 @@ lab.teixe.es, *.lab.teixe.es {
 		reverse_proxy mediaserver:4533
 	}
 
+	@tdarr host tdarr.lab.teixe.es
+	handle @tdarr {
+		reverse_proxy mediaserver:8265
+	}
+
 	# Fallback for otherwise unhandled domains
 	handle {
 		abort

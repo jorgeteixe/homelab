@@ -107,3 +107,9 @@
       description: Torrent client
       siteMonitor: https://qbittorrent.lab.teixe.es/
       showStats: false
+  - Tdarr:
+      icon: https://github.com/haveagitgat.png
+      href: https://tdarr.lab.teixe.es/
+      description: Media transcoding
+      siteMonitor: https://tdarr.lab.teixe.es/
+      showStats: false
