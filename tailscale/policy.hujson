@@ -23,11 +23,11 @@
 			"172.20.20.0/24": ["tag:mediaserver-host"]
 		},
 		"exitNode": ["tag:homelab-host", "tag:mediaserver-host"]
-	}
+	},
 	"nodeAttrs": [
 		{
 			"target": ["autogroup:member"],
-			"attr":   ["funnel"],
-		},
-	],
+			"attr":   ["funnel"]
+		}
+	]
 }
