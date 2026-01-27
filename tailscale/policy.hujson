@@ -1,9 +1,10 @@
 // This tailnet's ACLs are maintained in https://github.com/jorgeteixe/homelab
 {
 	"tagOwners": {
-		"tag:homelab-host":   ["jorgeteixe@github"],
+		"tag:homelab-host":     ["jorgeteixe@github"],
 		"tag:mediaserver-host": ["jorgeteixe@github"],
-		"tag:ci":             ["jorgeteixe@github"]
+		"tag:coolify-host":     ["jorgeteixe@github"],
+		"tag:ci":               ["jorgeteixe@github"]
 	},
 	"grants": [
 		{"src": ["*"], "dst": ["*"], "ip": ["*"]}
@@ -23,4 +24,10 @@
 		},
 		"exitNode": ["tag:homelab-host", "tag:mediaserver-host"]
 	}
+	"nodeAttrs": [
+		{
+			"target": ["autogroup:member"],
+			"attr":   ["funnel"],
+		},
+	],
 }
